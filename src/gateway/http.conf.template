@@ -15,7 +15,6 @@ server {
 	    return 200 "target: $target \napp: $app - subdomain: $subdomain - domain: $domain.$tld";
 	}
 
-
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
@@ -26,7 +25,6 @@ server {
 		proxy_set_header Host            $host;
 		proxy_set_header X-Forwarded-For $remote_addr;
 	}
-
 
     #error_page  404              /404.html;
 

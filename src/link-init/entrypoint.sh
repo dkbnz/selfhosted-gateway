@@ -18,7 +18,7 @@ export CONTAINER_NAME=$(echo $LINK_DOMAIN | python3 -c 'fqdn=input();print("-".j
 LINK_CLIENT_WG_PUBKEY=$(echo $WG_PRIVKEY | wg pubkey)
 
 # create gateway-link container
-CONTAINER_ID=$(docker --host ssh://$SSH_HOST run --name $CONTAINER_NAME --network gateway -p 18521/udp --cap-add NET_ADMIN --restart unless-stopped -it -e LINK_CLIENT_WG_PUBKEY=$LINK_CLIENT_WG_PUBKEY -d dkbnz/gateway-link:latest)
+CONTAINER_ID=$(docker --host ssh://$SSH_HOST run --name $CONTAINER_NAME --network gateway -p 18521/udp --cap-add NET_ADMIN --restart unless-stopped -it -e LINK_CLIENT_WG_PUBKEY=$LINK_CLIENT_WG_PUBKEY -d dkbnz/shgw-link-host:latest)
 # get gateway-link WireGuard pubkey 
 export GATEWAY_LINK_WG_PUBKEY=$(docker --host ssh://$SSH_HOST exec $CONTAINER_NAME bash -c 'cat /etc/wireguard/link0.key | wg pubkey')
 # get randomly assigned WireGuard port
@@ -27,6 +27,3 @@ export WIREGUARD_PORT=$(docker --host ssh://$SSH_HOST port $CONTAINER_NAME 18521
 export GATEWAY_IP=$(docker --host ssh://$SSH_HOST run curlimages/curl -s 4.icanhazip.com)
 
 cat link-compose-snippet.yml | envsubst
-
-# TODO add support for WireGuard config output
-# Fractal Networks is hiring: jobs@fractalnetworks.co
