@@ -24,8 +24,8 @@ This project automates the provisioning of a **Reverse Proxy-over-VPN (RPoVPN)**
 - A Linux host to act as the `gateway`, typically a cloud VPS (Hetzner, Digital Ocean, etc..) with the following requirements:
   - Open ports 80/443 (http(s)).
   - UDP port range listed `/proc/sys/net/ipv4/ip_local_port_range` exposed to the internet.
+  - `docker` installed.
   - SSH access to the `gateway`.
-  - `docker`, `git` & `make` installed.
 - Server with one or more services defined in a `docker-compose.yml` that you would like to expose to the internet.
 - A local machine to run the commands on. This may also be the server where the exposed services will run.
   - `docker`, `git` & `make` installed on the local machine.
@@ -34,17 +34,16 @@ This project automates the provisioning of a **Reverse Proxy-over-VPN (RPoVPN)**
 
 1. Point `*.mydomain.com` (DNS A Record) to the IPv4 & IPv6 address of your VPS Gateway host.
 
-2. Connect to the `gateway` via SSH and setup the `gateway` service:
-```console
-foo@gateway:~$ git clone ... && cd selfhosted-gateway
-foo@gateway:~/selfhosted-gateway$ make setup
-foo@gateway:~/selfhosted-gateway$ make gateway
-```
-
-3. On your local machine, generate a `link` and the required `docker-compose.yml` snippet:
+2. Clone the repo, build the images and initialize the `gateway`:
 ```console
 foo@local:~$ git clone ... && cd selfhosted-gateway
-foo@local:~/selfhosted-gateway$ make docker
+foo@local:~/selfhosted-gateway$ export GATEWAY=root@123.456.789.101
+foo@local:~/selfhosted-gateway$ make build
+foo@local:~/selfhosted-gateway$ make gateway
+```
+
+3. Generate a `link` and the required `docker-compose.yml` snippet:
+```console
 foo@local:~/selfhosted-gateway$ make link GATEWAY=root@123.456.789.101 FQDN=nginx.mydomain.com EXPOSE=nginx:80
   link:
     image: fractalnetworks/gateway-client:latest
